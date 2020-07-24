@@ -3,29 +3,40 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-    //Props are the properties or attributes <[tag] [attribute]=[attributeValue] />
-    constructor(props){
-        super(props);
-        this.state = {
-            //States act as the class values for a React component
-            value: null,
-        };
-    }
+    //Props are the properties or attributes <[tag] [attribute]=[attributeValue] />    
     render() {
       return (
         <button 
             className="square"
-            onClick={() => {this.setState({value:'X'})}}
+            onClick={() => {this.props.onClick()}}
         >
-            {this.state.value}
+            {this.props.value}
         </button>
       );
     }
   }
   
   class Board extends React.Component {
+    constructor(props){
+        super(props);
+        //States act as the class values for a React component
+        this.state = {
+            //Information is passed to square rather than from Square (the child component)
+            squares: Array(9).fill(null),
+        }
+    }
+
+    handleClick(i){
+        const squares = this.state.squares.slice();
+        squares[i] = 'X';
+        this.setState({squares: squares});
+    }
+    
     renderSquare(i) {
-      return <Square value={i} />;
+      return <Square 
+        value={this.state.squares[i]} 
+        onClick={() => this.handleClick(i)}
+      />;
     }
   
     render() {
